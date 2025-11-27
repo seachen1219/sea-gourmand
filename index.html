@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>我的必比登美食指南</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #faf5f0;
+      --card-bg: #ffffff;
+      --accent: #c0392b;
+      --accent-soft: #fceae7;
+      --text-main: #2c3e50;
+      --text-sub: #7f8c8d;
+      --radius-lg: 18px;
+      --radius-md: 999px;
+      --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #fffaf4 0, #f4ebe4 50%, #f5f5f5 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      padding: 16px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #f39c12, #e74c3c, #c0392b, #f39c12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .logo-text-main {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-text-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: var(--text-sub);
+      text-align: right;
+    }
+
+    .hero {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 20px 18px 18px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.6fr);
+      gap: 16px;
+    }
+
+    .hero-main-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    .hero-main-title span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .hero-note strong {
+      color: var(--accent);
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+      border-left: 1px dashed #eee;
+      padding-left: 14px;
+    }
+
+    .tiny-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+
+    .criteria-list {
+      list-style: none;
+      margin: 4px 0 0;
+      padding: 0;
+    }
+
+    .criteria-list li {
+      margin-bottom: 2px;
+    }
+
+    .criteria-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 6px;
+    }
+
+    .filters {
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .chip {
+      border-radius: var(--radius-md);
+      border: 1px solid #e0d3c6;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.8);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .chip span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .filter-right {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 12px 12px 10px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-tag {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 11px;
+      background: #111827;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: var(--radius-md);
+      opacity: 0.9;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .card-location {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .card-rating {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .stars {
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--text-sub);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      background: #f4f1ec;
+      padding: 2px 8px;
+      border-radius: var(--radius-md);
+      font-size: 10px;
+    }
+
+    .card-desc {
+      font-size: 12px;
+    }
+
+    .card-footer {
+      font-size: 11px;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .card-footer span {
+      white-space: nowrap;
+    }
+
+    .footnote {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 18px;
+      text-align: right;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 18px 14px 14px;
+      }
+      .hero-right {
+        border-left: none;
+        border-top: 1px dashed #eee;
+        padding-left: 0;
+        padding-top: 10px;
+      }
+      .cards {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .tagline {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 頂部 LOGO -->
+    <header>
+      <div class="logo">
+        <div class="logo-badge">JG</div>
+        <div>
+          <div class="logo-text-main">Joshua's Bib Guide</div>
+          <div class="logo-text-sub">我的平價必比登 · 個人口味嚴選</div>
+        </div>
+      </div>
+      <div class="tagline">
+        不是真正的米其林，<br />
+        只是我吃過、願意再回去的好店。
+      </div>
+    </header>
+
+    <!-- Hero 區塊 -->
+    <section class="hero">
+      <div>
+        <div class="hero-main-title">
+          我的 <span>Bib Gourmand</span> 名單
+        </div>
+        <div class="hero-subtitle">
+          以「學生負擔得起、但有記憶點」為標準，紀錄我在台灣各城市吃過、覺得值得推薦的店家。
+        </div>
+        <div class="hero-badges">
+          <div class="badge">under 300 TWD / 人</div>
+          <div class="badge">不踩雷清單</div>
+          <div class="badge">實際吃過才收錄</div>
+        </div>
+        <p class="hero-note">
+          <strong>說明：</strong>這不是官方必比登，只是我的個人口味筆記。  
+          分數偏主觀，但會盡量用「價格 / 排隊時間 / 交通便利 / 氣氛」一起考量。
+        </p>
+      </div>
+      <div class="hero-right">
+        <div>
+          <div class="tiny-title">SELECTION CRITERIA</div>
+          <ul class="criteria-list">
+            <li><span class="criteria-dot"></span>人均約 150–300 元以內</li>
+            <li><span class="criteria-dot"></span>吃完會想再訪，而不是「只有一次體驗」</li>
+            <li><span class="criteria-dot"></span>味道有記憶點，不是單純便宜</li>
+          </ul>
+        </div>
+        <div>
+          <div class="tiny-title">HOW TO READ</div>
+          <ul class="criteria-list">
+            <li><span class="criteria-dot"></span><strong>必比登指數</strong>：★ 多不代表高級，只代表「我有多愛」</li>
+            <li><span class="criteria-dot"></span><strong>最佳時段</strong>：避開排隊或最好吃的時間</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 篩選列 -->
+    <section class="filters">
+      <div class="filter-left">
+        <span class="filter-label">城市：</span>
+        <button class="chip active" data-city="all"><span class="dot"></span> 全部</button>
+        <button class="chip" data-city="tainan">台南</button>
+        <button class="chip" data-city="taipei">台北</button>
+        <button class="chip" data-city="kaohsiung">高雄</button>
+      </div>
+      <div class="filter-right">
+        點選城市可以快速篩選；之後你也可以新增更多城市。
+      </div>
+    </section>
+
+    <!-- 店家卡片區：之後你只要複製 .card 改內容就好 -->
+    <section class="cards" id="cards">
+      <!-- 範例 1：台南小吃 -->
+      <article class="card" data-city="tainan">
+        <div class="card-tag">台南 · 小吃</div>
+        <div class="card-header">
+          <div>
+            <div class="card-title">阿某意麵（示範店家）</div>
+            <div class="card-location">Tainan · 意麵 / 湯品</div>
+          </div>
+          <div class="card-rating">
+            4.5
+            <span class="stars">★★★★☆</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span class="pill">人均約 90–140 元</span>
+          <span class="pill">推薦：乾意麵＋餛飩湯</span>
+          <span class="pill">排隊：平日中午 10–20 分鐘</span>
+        </div>
+        <p class="card-desc">
+          醬油香不是死鹹那種，而是混著豬油香氣的老台南口味。麵體偏軟但不會糊，乾意麵加上辣椒醬是靈魂。
+          如果第一次來，建議點乾麵＋一碗清湯，把「麵＋湯」一起吃掉會剛剛好。
+        </p>
+        <div class="card-footer">
+          <span>最佳時段：平日 13:30 之後，人少一點</span>
+          <span>個人口味：偏重鹹 · 喜歡豬油香的人會愛</span>
+        </div>
+      </article>
+
+      <!-- 範例 2：台北咖啡店 -->
+      <article class="card" data-city="taipei">
+        <div class="card-tag">台北 · 咖啡</div>
+        <div class="card-header">
+          <div>
+            <div class="card-title">Somewhere Café（示範店家）</div>
+            <div class="card-location">Taipei · 咖啡 / 輕食</div>
+          </div>
+          <div class="card-rating">
+            4.2
+            <span class="stars">★★★★☆</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span class="pill">人均約 180–260 元</span>
+          <span class="pill">推薦：手沖＋肉桂捲</span>
+          <span class="pill">插座友善 · 可讀書</span>
+        </div>
+        <p class="card-desc">
+          氛圍取勝型咖啡廳。座位不多，但光線很好，適合帶電腦坐 2–3 小時。
+          咖啡不是走酸感很強的路線，比較平衡好入口。肉桂捲偏紮實款，不是爆餡那種。
+        </p>
+        <div class="card-footer">
+          <span>最佳時段：平日 14:00–17:00</span>
+          <span>個人口味：拿鐵勝過手沖一點點</span>
+        </div>
+      </article>
+
+      <!-- 範例 3：高雄 -->
+      <article class="card" data-city="kaohsiung">
+        <div class="card-tag">高雄 · 主食</div>
+        <div class="card-header">
+          <div>
+            <div class="card-title">某某牛肉湯（示範店家）</div>
+            <div class="card-location">Kaohsiung · 牛肉湯 / 白飯</div>
+          </div>
+          <div class="card-rating">
+            4.7
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span class="pill">人均約 160–220 元</span>
+          <span class="pill">推薦：清燙牛肉湯＋白飯</span>
+          <span class="pill">營業到深夜</span>
+        </div>
+        <p class="card-desc">
+          湯頭清甜但不油膩，牛肉軟嫩，在嘴巴裡是有彈性但不難咬的那種，非常舒服。
+          半夜肚子餓想吃熱食，這間會是我在高雄心中的 Top 3 選擇。
+        </p>
+        <div class="card-footer">
+          <span>最佳時段：晚上 21:00 前，太晚會排隊</span>
+          <span>個人口味：非常適合想喝湯當主食的日子</span>
+        </div>
+      </article>
+    </section>
+
+    <div class="footnote">
+      之後可以把示範店家換成你真的吃過的店。<br />
+      每一張卡就是一間「你的必比登」。
+    </div>
+  </div>
+
+  <script>
+    // 簡單的城市篩選：點 chip → 顯示對應城市
+    const chips = document.querySelectorAll(".chip");
+    const cards = document.querySelectorAll(".card");
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const city = chip.dataset.city;
+
+        chips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+
+        cards.forEach(card => {
+          if (city === "all") {
+            card.style.display = "";
+          } else {
+            card.style.display = card.dataset.city === city ? "" : "none";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
